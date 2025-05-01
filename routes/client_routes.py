@@ -1,7 +1,6 @@
 from flask import Blueprint, request, jsonify
 from models.client import Client
-from extensions import db  # Usamos directamente db
-
+from extensions import db  
 client_bp = Blueprint("client_bp", __name__)
 
 @client_bp.route("/", methods=["GET"])

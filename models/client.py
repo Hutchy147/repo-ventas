@@ -1,4 +1,4 @@
-from extensions import db  # ← usamos la instancia sin importar app
+from extensions import db  
 
 class Client(db.Model):
     __tablename__ = 'clients'
@@ -6,8 +6,8 @@ class Client(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     nombre = db.Column(db.String(100), nullable=False)
     email = db.Column(db.String(100), unique=True, nullable=False)
-    dni = db.Column(db.String(20), nullable=False)
-    telefono = db.Column(db.String(20))
+    dni = db.Column(db.String(8), nullable=False)  # Ajustado a 8 caracteres
+    telefono = db.Column(db.String(20), nullable=True)  # Explícito que permite null
 
     def to_dict(self):
         return {
@@ -15,5 +15,5 @@ class Client(db.Model):
             "nombre": self.nombre,
             "email": self.email,
             "dni": self.dni,
-            "telefono": self.telefono
+            "telefono": self.telefono if self.telefono else None  # Manejo explícito de null
         }
