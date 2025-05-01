@@ -1,7 +1,6 @@
-
 from flask import Blueprint, request, jsonify
 from models.client import Client
-from app import db
+from extensions import db  # Usamos directamente db
 
 client_bp = Blueprint("client_bp", __name__)
 
@@ -26,15 +25,15 @@ def create_client():
     except Exception as e:
         db.session.rollback()
         return jsonify({"error": str(e)}), 400
-    
+
 @client_bp.route("/<int:id>", methods=["PUT"])
 def update_client(id):
-    data = request.get_json()
     client = Client.query.get(id)
 
     if not client:
         return jsonify({"error": "Cliente no encontrado"}), 404
 
+    data = request.get_json()
     try:
         client.nombre = data.get("nombre", client.nombre)
         client.email = data.get("email", client.email)

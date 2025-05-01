@@ -1,4 +1,4 @@
-from app import db
+from extensions import db  # ← usamos la instancia sin importar app
 
 class Client(db.Model):
     __tablename__ = 'clients'
