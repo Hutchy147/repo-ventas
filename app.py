@@ -7,6 +7,8 @@ def create_app():
     app.config.from_object(Config)
 
     db.init_app(app)
+    with app.app_context():
+        db.create_all()  # Esto creará todas las tablas de tus modelos importados
 
     # Importar solo rutas de productos (en esta rama)
     from routes.product_routes import product_bp
