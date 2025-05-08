@@ -6,18 +6,18 @@ from extensions import db
 client_bp = Blueprint("client_bp", __name__)
 
 # RECIBIR CLIENTES
-@client_bp.route("/", methods=["GET"])
+@client_bp.route("/get_clients", methods=["GET"])
 def get_clients():
     clients = Client.query.all()
     return jsonify([c.to_dict() for c in clients]), 200
 
 
 # CREAR CLIENTES
-@client_bp.route("/", methods=["POST"])
+@client_bp.route("/create_client", methods=["POST"])
 def create_client():
     data = request.get_json()
     try:
-        new_client = Client( nombre = data["name"], email = data["email"], dni = data["dni"],)
+        new_client = Client(name=data["name"], email=data["email"], dni=data["dni"])
 
         db.session.add(new_client)
         db.session.flush() # obtener el ID del cliente antes del commit
@@ -26,7 +26,9 @@ def create_client():
 
         for number in phones:
             phone = Phone(number = number, client_id = new_client.id)
-            db.session.add(phone)  
+            db.session.add(phone) 
+
+        db.session.commit() 
         return jsonify({"message": "Cliente creado con éxito"}), 201
     
     except Exception as e:
@@ -35,7 +37,7 @@ def create_client():
 
 
 # ACTUALIZAR CLIENTES
-@client_bp.route("/<int:id>", methods=["PUT"])
+@client_bp.route("/update_client/<int:id>", methods=["PUT"])
 def update_client(id):
     client = Client.query.get(id)
 
@@ -50,9 +52,9 @@ def update_client(id):
 
         # ACTUALIZAR TELÉFONOS
         if "phones" in data:
-            Phone.query.fulter_by(client_id = client.id).delete() # Eliminar los teléfonos existentes
+            Phone.query.filter_by(client_id = client.id).delete() # Eliminar los teléfonos existentes
             # AGREGAR NUEVOS TELÉFONOS
-            for number in data ["phones"]:
+            for number in data["phones"]:
                 phone = Phone(number = number, client_id = client.id)
                 db.session.add(phone)
 
@@ -65,7 +67,7 @@ def update_client(id):
 
 
 # ELIMINAR CLIENT
-@client_bp.route("/<int:id>", methods=["DELETE"])
+@client_bp.route("/delete_client/<int:id>", methods=["DELETE"])
 def delete_client(id):
     client = Client.query.get(id)
 
