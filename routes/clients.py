@@ -1,30 +1,40 @@
 from flask import Blueprint, request, jsonify
 from models.client import Client
+from models.phone import Phone 
 from extensions import db  
+
 client_bp = Blueprint("client_bp", __name__)
 
+# RECIBIR CLIENTES
 @client_bp.route("/", methods=["GET"])
 def get_clients():
     clients = Client.query.all()
     return jsonify([c.to_dict() for c in clients]), 200
 
+
+# CREAR CLIENTES
 @client_bp.route("/", methods=["POST"])
 def create_client():
     data = request.get_json()
     try:
-        new_client = Client(
-            nombre=data["nombre"],
-            email=data["email"],
-            dni=data["dni"],
-            telefono=data.get("telefono")
-        )
+        new_client = Client( nombre = data["name"], email = data["email"], dni = data["dni"],)
+
         db.session.add(new_client)
-        db.session.commit()
+        db.session.flush() # obtener el ID del cliente antes del commit
+
+        phones = data.get("phones", [])
+
+        for number in phones:
+            phone = Phone(number = number, client_id = new_client.id)
+            db.session.add(phone)  
         return jsonify({"message": "Cliente creado con éxito"}), 201
+    
     except Exception as e:
         db.session.rollback()
         return jsonify({"error": str(e)}), 400
 
+
+# ACTUALIZAR CLIENTES
 @client_bp.route("/<int:id>", methods=["PUT"])
 def update_client(id):
     client = Client.query.get(id)
@@ -34,17 +44,27 @@ def update_client(id):
 
     data = request.get_json()
     try:
-        client.nombre = data.get("nombre", client.nombre)
+        client.name = data.get("name", client.name)
         client.email = data.get("email", client.email)
         client.dni = data.get("dni", client.dni)
-        client.telefono = data.get("telefono", client.telefono)
+
+        # ACTUALIZAR TELÉFONOS
+        if "phones" in data:
+            Phone.query.fulter_by(client_id = client.id).delete() # Eliminar los teléfonos existentes
+            # AGREGAR NUEVOS TELÉFONOS
+            for number in data ["phones"]:
+                phone = Phone(number = number, client_id = client.id)
+                db.session.add(phone)
 
         db.session.commit()
         return jsonify({"message": "Cliente actualizado"}), 200
+    
     except Exception as e:
         db.session.rollback()
         return jsonify({"error": str(e)}), 400
 
+
+# ELIMINAR CLIENT
 @client_bp.route("/<int:id>", methods=["DELETE"])
 def delete_client(id):
     client = Client.query.get(id)
@@ -56,6 +76,7 @@ def delete_client(id):
         db.session.delete(client)
         db.session.commit()
         return jsonify({"message": "Cliente eliminado"}), 200
+    
     except Exception as e:
         db.session.rollback()
         return jsonify({"error": str(e)}), 400

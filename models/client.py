@@ -1,19 +1,22 @@
-from extensions import db  
+from extensions import db
+from models.phone import Phone
 
 class Client(db.Model):
     __tablename__ = 'clients'
 
     id = db.Column(db.Integer, primary_key=True)
-    nombre = db.Column(db.String(100), nullable=False)
+    name = db.Column(db.String(100), nullable=False)
     email = db.Column(db.String(100), unique=True, nullable=False)
     dni = db.Column(db.String(8), nullable=False)  # Ajustado a 8 caracteres
-    telefono = db.Column(db.String(20), nullable=True)  # Explícito que permite null
+    phone = db.Column(db.String(20), nullable=True)  # Explícito que permite null
+
+    phones = db.relationship("Phone", backref = "client", cascade = "all, delete-orphan")
 
     def to_dict(self):
         return {
             "id": self.id,
-            "nombre": self.nombre,
+            "name": self.nombre,
             "email": self.email,
             "dni": self.dni,
-            "telefono": self.telefono if self.telefono else None  # Manejo explícito de null
+            "phones": [phone.to_dict() for phone in self.phones]
         }
