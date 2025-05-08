@@ -1,12 +1,13 @@
 #Entidad Proveedor
-from Database import db
+from database import db
 
 class Suplier(db.Model):
     __tablename__="suplier"
+    
     id=db.Column(db.Integer,primary_key=True)
     name=db.Column(db.String(100),nullable=True)
     adress=db.Column(db.String(100),nullable=True)
-    phone=db.Column(db.Integer(50),unique=True,nullable=True)
+    phone=db.Column(db.Integer,unique=True,nullable=True)
     website=db.Column(db.String(500),unique=True,nullable=True)
     rut=db.Column(db.Integer,unique=True,nullable=True)
 
