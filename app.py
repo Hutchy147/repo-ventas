@@ -1,7 +1,7 @@
 #APP
 from flask import Flask
 from database import db
-from routes.suplier_route import suplier
+from routes.supelier import suplier
 from model.suplier import suplier
 
 def create_app():
