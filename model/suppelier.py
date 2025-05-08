@@ -1,8 +1,8 @@
 #Entidad Proveedor
 from database import db
 
-class Suplier(db.Model):
-    __tablename__="suplier"
+class Suppelier(db.Model):
+    __tablename__="suppelier"
     
     id=db.Column(db.Integer,primary_key=True)
     name=db.Column(db.String(100),nullable=True)
