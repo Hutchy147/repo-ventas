@@ -4,7 +4,7 @@ from models.category import Category
 
 category_bp = Blueprint("category",__name__)
 
-# MOSTRAR CATEGORIA
+# OBTENER CATEGORIA
 @category_bp.route("/get_categories", methods = ["GET"])
 def get_categories():
     categories = Category.query.all()
