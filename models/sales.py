@@ -1,25 +1,16 @@
 from extensions import db
 
 class Sale(db.Model):
-    __tablename__ = 'sales'
-
     id = db.Column(db.Integer, primary_key=True)
     date = db.Column(db.Date, nullable=False)
-    client = db.Column(db.String(100), nullable=False)
+    client_id = db.Column(db.Integer, db.ForeignKey("client.id"), nullable=False)#clave foranea
     discount = db.Column(db.Float, nullable=False)
     total = db.Column(db.Float, nullable=False)
 
-    def __init__(self, date, client, discount, total):
-        self.date = date
-        self.client = client
-        self.discount = discount
-        self.total = total
-
-    def to_dict(self):
-        return {
-            "id": self.id,
-            "date": self.date.isoformat(),
-            "client": self.client,
-            "discount": self.discount,
-            "total": self.total
-        }
+class SaleDetail(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    sale_id = db.Column(db.Integer, db.ForeignKey("sale.id"), nullable=False)#clave forane
+    product_id = db.Column(db.Integer, db.ForeignKey("product.id"), nullable=False)#clave foranea
+    quantity = db.Column(db.Integer, nullable=False)
+    unit_price = db.Column(db.Float, nullable=False)
+    subtotal = db.Column(db.Float, nullable=False)
