@@ -14,8 +14,10 @@ class Suppelier(db.Model):
     # Relación con productos
     products = db.relationship('Product', back_populates='suppelier')
 
-    # Otras relaciones...
+    # Relación con dirección
     address = db.relationship('Address', back_populates='suppelier', uselist=False, cascade='all, delete-orphan')
+
+    # Relación con teléfonos
     phones = db.relationship('Phone', back_populates='suppelier', cascade='all, delete-orphan')
 
     def to_dict(self):
@@ -26,7 +28,7 @@ class Suppelier(db.Model):
             "rut": self.rut,
             "created_at": self.created_at.isoformat(),
             "updated_at": self.updated_at.isoformat(),
-            "address": self.address.to_dict() if self.address else None,
-            "phones": [p.to_dict() for p in self.phones],
+            "address": self.address.to_dict() if self.address else None, # Relación con dirección
+            "phones": [p.to_dict() for p in self.phones], # Relación con teléfonos
             "products": [product.to_dict() for product in self.products]  # Relación con productos
         }
