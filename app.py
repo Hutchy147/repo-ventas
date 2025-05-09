@@ -1,4 +1,4 @@
-from flask import Flask, render_template
+from flask import Flask
 from database import db
 from routes.clients import client_bp
 from routes.products import product_bp
@@ -19,11 +19,6 @@ def create_app():
     app.register_blueprint(product_bp, url_prefix="/api/products")
     app.register_blueprint(suppelier_bp, url_prefix="/api/suppeliers")
     app.register_blueprint(categories_bp, url_prefix="/api/categories")
-
-    # Página principal
-    @app.route("/")
-    def index():
-        return render_template("index.html")
 
     return app
 
