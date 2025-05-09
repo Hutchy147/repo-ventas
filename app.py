@@ -7,11 +7,11 @@ def create_app():
     app.config.from_object(Config)
 
     db.init_app(app)
-    with app.app_context():
-        from models.product import Product
-        db.create_all()  # Esto creará todas las tablas de tus modelos importados
 
-    # Importar solo rutas de productos (en esta rama)
+    with app.app_context():
+        from models.product import Product  
+        db.create_all()
+
     from routes.product_routes import product_bp
     app.register_blueprint(product_bp, url_prefix="/api/products")
 

@@ -30,11 +30,13 @@ def update_product(id):
     product = Product.query.get(id)
     if not product:
         return jsonify({"error": "Producto no encontrado"}), 404
+
     data = request.get_json()
     try:
         product.nombre = data.get("nombre", product.nombre)
         product.marca = data.get("marca", product.marca)
         product.stock = data.get("stock", product.stock)
+
         db.session.commit()
         return jsonify({"message": "Producto actualizado"}), 200
     except Exception as e:
@@ -46,6 +48,7 @@ def delete_product(id):
     product = Product.query.get(id)
     if not product:
         return jsonify({"error": "Producto no encontrado"}), 404
+
     try:
         db.session.delete(product)
         db.session.commit()
@@ -53,3 +56,38 @@ def delete_product(id):
     except Exception as e:
         db.session.rollback()
         return jsonify({"error": str(e)}), 400
+
+@product_bp.route("/<int:id>/stock", methods=["PUT"])
+def modificar_stock(id):
+    from extensions import db
+    from models.product import Product
+
+    data = request.get_json()
+    operacion = data.get("operacion")
+    cantidad = data.get("cantidad")
+
+    if not operacion or not isinstance(cantidad, int):
+        return jsonify({"error": "Datos inválidos"}), 400
+
+    producto = db.session.get(Product, id)
+
+    if not producto:
+        return jsonify({"error": "Producto no encontrado"}), 404
+
+    try:
+        if operacion == "sumar":
+            producto.stock += cantidad
+        elif operacion == "restar":
+            if producto.stock < cantidad:
+                return jsonify({"error": "Stock insuficiente"}), 400
+            producto.stock -= cantidad
+        else:
+            return jsonify({"error": "Operación no válida"}), 400
+
+        db.session.commit()
+        return jsonify({"mensaje": "Stock actualizado", "nuevo_stock": producto.stock}), 200
+
+    except Exception as e:
+        db.session.rollback()
+        return jsonify({"error": str(e)}), 500
+
