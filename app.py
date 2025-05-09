@@ -1,3 +1,4 @@
+from flask import Flask
 from config import Config
 from database import db
 from models.category import Category
