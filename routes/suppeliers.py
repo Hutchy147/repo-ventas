@@ -1,114 +1,96 @@
-from flask import Blueprint,request,jsonify
-from database import db
+from flask import Blueprint, request, jsonify
 from models.suppelier import Suppelier
+from database import db
+from datetime import datetime
 
-suppelier=Blueprint("suppelier",__name__)
+suppelier_bp = Blueprint("suppelier", __name__)
 
-@suppelier.route("/get_suppelier",methods=["GET"])#Recibo los datos de los proveedores
-
+@suppelier_bp.route("/get_suppelier", methods=["GET"])
 def get_suppelier():
-    suppeliers=Suppelier.query.all()#Obtengo los datos de los proveedores en la base de datos
-    
-    return jsonify([suplier.serialize() for suplier in suppeliers])
+    suppeliers = Suppelier.query.all()
+    return jsonify([s.serialize() for s in suppeliers]), 200
 
-@suppelier.route("/post_suppelier",methods=["POST"])#Agregar a nuevos proveedores
-
+@suppelier_bp.route("/post_suppelier", methods=["POST"])
 def post_suppelier():
-    data=request.get_json()
-    
-    attributes=["name","phone","website","rut"]
-    missing=[key for key in attributes if key not in data]
-    
-    if not data or missing:
-        return jsonify({"Error":"Faltan datos","Faltantes":missing})
-    if Suppelier.query.filter_by(rut=data["rut"]).first():#verifico si el rut del proveedor ya existe
-        return jsonify({"Error": "Rut ya registrado"}),400
-    
-    if Suppelier.query.filter_by(phone=data["phone"]).first():#verifico si el telefono del proveedor ya existe
-        return jsonify({"Error": "phone ya registrado"}),400
-    
-    if Suppelier.query.filter_by(website=data["website"]).first():#verifico si la pagina del proveedor ya existe
-        return jsonify({"Error": "website ya registrado"}),400
+    data = request.get_json()
+    required = ["name", "phone", "website", "rut"]
+    missing = [k for k in required if k not in data]
 
-    
+    if missing:
+        return jsonify({"Error": "Faltan datos", "Faltantes": missing}), 400
+    if Suppelier.query.filter_by(rut=data["rut"]).first():
+        return jsonify({"Error": "Rut ya registrado"}), 400
+    if Suppelier.query.filter_by(phone=data["phone"]).first():
+        return jsonify({"Error": "Teléfono ya registrado"}), 400
+    if Suppelier.query.filter_by(website=data["website"]).first():
+        return jsonify({"Error": "Website ya registrado"}), 400
+
     try:
-
-        new_suppelier=Suppelier(
+        new_suppelier = Suppelier(
             name=data["name"],
             phone=data["phone"],
             website=data["website"],
-            rut=data["rut"])
-        
+            rut=data["rut"],
+            created_at=datetime.utcnow(),
+            updated_at=datetime.utcnow()
+        )
         db.session.add(new_suppelier)
         db.session.commit()
-        return jsonify(new_suppelier.serialize()),201
-    
+        return jsonify(new_suppelier.serialize()), 201
     except Exception as e:
         db.session.rollback()
-        return jsonify({"Error":str(e)}),500
+        return jsonify({"Error": str(e)}), 500
 
-@suppelier.route("/put_suppelier/<int:id>",methods=["PUT"])#actaulizar al proveedor completamente
-
+@suppelier_bp.route("/put_suppelier/<int:id>", methods=["PUT"])
 def put_suppelier(id):
-    suppelier=Suppelier.query.get(id)
-    if not suppelier:
-        return jsonify({"Menssje":"Proveedor no encontrado"}),404
-    
+    supp = Suppelier.query.get(id)
+    if not supp:
+        return jsonify({"Mensaje": "Proveedor no encontrado"}), 404
+
+    data = request.get_json()
     try:
-        data=request.get_json()
-        suppelier.name = data.get("name",suppelier.name)
-        suppelier.phone = data.get("phone",suppelier.phone)
-        suppelier.website = data.get("website",suppelier.website)
-        suppelier.rut = data.get("rut",suppelier.rut)
+        supp.name = data.get("name", supp.name)
+        supp.phone = data.get("phone", supp.phone)
+        supp.website = data.get("website", supp.website)
+        supp.rut = data.get("rut", supp.rut)
+        supp.updated_at = datetime.utcnow()
 
         db.session.commit()
-        return jsonify({"Mensaje":"Proveedor actualizado"})
-    
+        return jsonify({"Mensaje": "Proveedor actualizado"})
     except Exception as e:
         db.session.rollback()
-        return jsonify({"Error": str(e)}),500
-    
-@suppelier.route("/patch_suppelier/<int:id>",methods =["PATCH"])#actualiza al proveedor por parte
+        return jsonify({"Error": str(e)}), 500
+
+@suppelier_bp.route("/patch_suppelier/<int:id>", methods=["PATCH"])
 def patch_suppelier(id):
-    suppelier=Suppelier.query.get(id)
-    data=request.get_json()
+    supp = Suppelier.query.get(id)
+    if not supp:
+        return jsonify({"Mensaje": "Proveedor no encontrado"}), 404
 
-    if not suppelier:
-        return jsonify({"Mensaje":"Proveedor no encontrado"}),404
+    data = request.get_json()
     try:
-        if "name" in data and data["name"]:
-            suppelier.name = data["name"]
+        if "name" in data: supp.name = data["name"]
+        if "phone" in data: supp.phone = data["phone"]
+        if "website" in data: supp.website = data["website"]
+        if "rut" in data: supp.rut = data["rut"]
+        supp.updated_at = datetime.utcnow()
 
-        if "phone" in data and data["phone"]:
-            suppelier.phone = data["phone"]
-
-        if "website" in data and data["website"]:
-            suppelier.website = data["website"]
-        
-        if "rut" in data and data ["rut"]:
-            suppelier.rut = data["rut"]
-        
         db.session.commit()
-        return jsonify({"Mensaje":"Proveedor actualizado"})
+        return jsonify({"Mensaje": "Proveedor actualizado"})
     except Exception as e:
         db.session.rollback()
-        return jsonify({"Error": str(e)}),500
+        return jsonify({"Error": str(e)}), 500
 
-@suppelier.route("/delete_suppelier/<int:id>",methods=["DELETE"])
-
+@suppelier_bp.route("/delete_suppelier/<int:id>", methods=["DELETE"])
 def delete_suppelier(id):
-    suppelier=Suppelier.query.get(id)
-    if not suppelier:
-        return jsonify({"Mensaje":"No se encuentra proveedor"}),404
-    
+    supp = Suppelier.query.get(id)
+    if not supp:
+        return jsonify({"Mensaje": "No se encuentra proveedor"}), 404
+
     try:
-        db.session.delete(suppelier)
+        db.session.delete(supp)
         db.session.commit()
-        return jsonify({"Mensaje":"Proveedor eliminado"}),200
-    
+        return jsonify({"Mensaje": "Proveedor eliminado"}), 200
     except Exception as e:
         db.session.rollback()
-        return jsonify({"Error":str(e)}),500
-
-
-
+        return jsonify({"Error": str(e)}), 500
