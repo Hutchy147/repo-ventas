@@ -1,1 +1,0 @@
-agarren la pala
