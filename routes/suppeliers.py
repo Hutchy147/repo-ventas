@@ -4,14 +4,14 @@ from model.suppelier import Suppelier
 
 suppelier=Blueprint("suppelier",__name__)
 
-@suppelier.route("/get_suppelier",methods=["GET"])
+@suppelier.route("/get_suppelier",methods=["GET"])#Recibo los datos de los proveedores
 
 def get_suppelier():
     suppeliers=Suppelier.query.all()#Obtengo los datos de los proveedores en la base de datos
     
     return jsonify([suplier.serialize() for suplier in suppeliers])
 
-@suppelier.route("/post_suppelier",methods=["POST"])
+@suppelier.route("/post_suppelier",methods=["POST"])#Agregar a nuevos proveedores
 
 def post_suppelier():
     data=request.get_json()
@@ -47,7 +47,7 @@ def post_suppelier():
         db.session.rollback()
         return jsonify({"Error":str(e)}),500
 
-@suppelier.route("/put_suppelier/<int:id>",methods=["PUT"])
+@suppelier.route("/put_suppelier/<int:id>",methods=["PUT"])#actaulizar al proveedor completamente
 
 def put_suppelier(id):
     suppelier=Suppelier.query.get(id)
@@ -68,7 +68,7 @@ def put_suppelier(id):
         db.session.rollback()
         return jsonify({"Error": str(e)}),500
     
-@suppelier.route("/patch_suppelier/<int:id>",methods =["PATCH"])
+@suppelier.route("/patch_suppelier/<int:id>",methods =["PATCH"])#actualiza al proveedor por parte
 def patch_suppelier(id):
     suppelier=Suppelier.query.get(id)
     data=request.get_json()
