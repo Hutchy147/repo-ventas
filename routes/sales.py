@@ -1,7 +1,11 @@
 from flask import Blueprint, request, jsonify
 from models.sale import Sale, SaleDetail
+from models.client import Client
+from models.product import Product
 from data_base import db
 from datetime import datetime
+
+
 
 sales_bp = Blueprint("sales_bp", __name__)
 

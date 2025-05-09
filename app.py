@@ -4,7 +4,7 @@ from routes.sales import sales_bp
 
 def create_app():
     app = Flask(__name__)
-    app.config["SQLALCHEMY_DATABASE_URI"] = "mysql+pymysql://root:Izq434f.v05@localhost/ventas_db"
+    app.config["SQLALCHEMY_DATABASE_URI"] = "mysql+pymysql://root:Izq434f.v@localhost/ventas_db"
     app.config["SQLALCHEMY_TRACK_MODIFICATIONS"]= False
     db.init_app(app)
     app.register_blueprint(sales_bp, url_prefix="/api/sales")

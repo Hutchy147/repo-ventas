@@ -1,6 +1,6 @@
 from data_base import db
 class Client(db.Model):
-    _tablename_ = 'clients'
+    __tablename__ = 'clients'
 
     id = db.Column(db.Integer, primary_key=True)
     nombre = db.Column(db.String(100), nullable=False)

@@ -1,13 +1,15 @@
 from data_base import db
 
+
 class Sale(db.Model):
+    __tablename__ = "sales" 
     id = db.Column(db.Integer, primary_key=True)
     date = db.Column(db.String(20), nullable=False)
-    client_id = db.Column(db.Integer, db.ForeignKey("client.id"), nullable=False)  # clave foránea
+    client_id = db.Column(db.Integer, db.ForeignKey("clients.id"), nullable=False)
+
     discount = db.Column(db.Float, nullable=False)
     total = db.Column(db.Float, nullable=False)
 
-    # Método para convertir la venta a un diccionario
     def sales_invoice(self):
         return {
             "id": self.id,
@@ -19,8 +21,8 @@ class Sale(db.Model):
 
 class SaleDetail(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    sale_id = db.Column(db.Integer, db.ForeignKey("sale.id"), nullable=False)  # clave foránea
-    product_id = db.Column(db.Integer, db.ForeignKey("product.id"), nullable=False)  # clave foránea
+    sale_id = db.Column(db.Integer, db.ForeignKey("sales.id"), nullable=False)# clave foránea
+    product_id = db.Column(db.Integer, db.ForeignKey("products.id"), nullable=False)  # clave foránea
     quantity = db.Column(db.Integer, nullable=False)
     unit_price = db.Column(db.Float, nullable=False)
     subtotal = db.Column(db.Float, nullable=False)

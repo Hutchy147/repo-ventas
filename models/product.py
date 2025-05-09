@@ -1,7 +1,7 @@
 from data_base import db
 
 class Product(db.Model):
-    _tablename_ = 'products'
+    __tablename__ = 'products'
 
     id = db.Column(db.Integer, primary_key=True)
     nombre = db.Column(db.String(100), nullable=False)
