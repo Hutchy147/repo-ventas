@@ -12,8 +12,8 @@ def create_app():
 
     with app.app_context():
         db.create_all()
-
-    app.register_blueprint(suppelier,url_prefix="/api/suppelier")
+    from routes.suppeliers import suppelier
+    app.register_blueprint(suppelier,url_prefix="/api/suppeliers")
     return app
 
 if __name__ == "__main__":
