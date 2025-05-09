@@ -11,7 +11,10 @@ class Client(db.Model):
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
     updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
 
+    # Relación con la dirección, un solo cliente tiene una dirección
     address = db.relationship('Address', back_populates='client', uselist=False, cascade='all, delete-orphan')
+
+    # Relación con los teléfonos, un cliente puede tener varios números de teléfono
     phones = db.relationship('Phone', back_populates='client', cascade='all, delete-orphan')
 
     def to_dict(self):
@@ -22,6 +25,6 @@ class Client(db.Model):
             "dni": self.dni,
             "created_at": self.created_at.isoformat(),
             "updated_at": self.updated_at.isoformat(),
-            "phones": [phone.to_dict() for phone in self.phones],
-            "address": self.address.to_dict() if self.address else None
+            "phones": [phone.to_dict() for phone in self.phones],  # Devuelve los teléfonos asociados al cliente
+            "address": self.address.to_dict() if self.address else None  # Devuelve la dirección si existe
         }

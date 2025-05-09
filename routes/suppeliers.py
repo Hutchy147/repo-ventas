@@ -1,5 +1,6 @@
 from flask import Blueprint, request, jsonify
 from models.suppelier import Suppelier
+from models.product import Product
 from database import db
 from datetime import datetime
 
@@ -94,3 +95,38 @@ def delete_suppelier(id):
     except Exception as e:
         db.session.rollback()
         return jsonify({"Error": str(e)}), 500
+
+# Ruta nueva: proveedor actualiza stock de un producto
+@suppelier_bp.route("/<int:suppelier_id>/product/<int:product_id>/stock", methods=["PUT"])
+def update_product_stock_by_suppelier(suppelier_id, product_id):
+    data = request.get_json()
+    operacion = data.get("operacion")
+    cantidad = data.get("cantidad")
+
+    if not operacion or not isinstance(cantidad, int):
+        return jsonify({"error": "Invalid data"}), 400
+
+    product = Product.query.get(product_id)
+    if not product:
+        return jsonify({"error": "Product not found"}), 404
+
+    if product.suppelier_id != suppelier_id:
+        return jsonify({"error": "Product does not belong to the supplier"}), 403
+
+    try:
+        if operacion == "sumar":
+            product.stock += cantidad
+        elif operacion == "restar":
+            if product.stock < cantidad:
+                return jsonify({"error": "Insufficient stock"}), 400
+            product.stock -= cantidad
+        else:
+            return jsonify({"error": "Invalid operation"}), 400
+
+        product.updated_at = datetime.utcnow()
+        db.session.commit()
+        return jsonify({"message": "Stock updated", "new_stock": product.stock}), 200
+
+    except Exception as e:
+        db.session.rollback()
+        return jsonify({"error": str(e)}), 500
