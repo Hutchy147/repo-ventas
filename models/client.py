@@ -27,4 +27,4 @@ class Client(db.Model):
             "updated_at": self.updated_at.isoformat(),
             "phones": [phone.to_dict() for phone in self.phones],  # Devuelve los teléfonos asociados al cliente
             "address": self.address.to_dict() if self.address else None  # Devuelve la dirección si existe
-        }
+            }

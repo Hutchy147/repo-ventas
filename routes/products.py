@@ -53,7 +53,6 @@ def create_product():
         db.session.rollback()
         return jsonify({"error": str(e)}), 400
 
-
 @product_bp.route("/<int:id>", methods=["PUT"])
 def update_product(id):
     product = Product.query.get(id)

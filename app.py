@@ -11,9 +11,6 @@ def create_app():
     app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
     db.init_app(app)
 
-    with app.app_context():
-        db.create_all()
-
     # Blueprints
     app.register_blueprint(client_bp, url_prefix="/api/clients")
     app.register_blueprint(product_bp, url_prefix="/api/products")
