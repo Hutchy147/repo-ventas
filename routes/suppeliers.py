@@ -1,6 +1,6 @@
 from flask import Blueprint,request,jsonify
 from database import db
-from model.suppelier import Suppelier
+from models.suppelier import Suppelier
 
 suppelier=Blueprint("suppelier",__name__)
 

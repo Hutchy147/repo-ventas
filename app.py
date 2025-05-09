@@ -1,7 +1,7 @@
 from flask import Flask
 from database import db
 from routes.suppeliers import suppelier
-from model.suppelier import Suppelier
+from models.suppelier import Suppelier
 
 def create_app():
     app=Flask(__name__)
