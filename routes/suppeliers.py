@@ -46,7 +46,54 @@ def post_suppelier():
     except Exception as e:
         db.session.rollback()
         return jsonify({"Error":str(e)}),500
+
+@suppelier.route("/put_suppelier/<int:id>",methods=["PUT"])
+
+def put_suppelier(id):
+    suppelier=Suppelier.query.get(id)
+    if not suppelier:
+        return jsonify({"Menssje":"Proveedor no encontrado"}),404
     
+    try:
+        data=request.get_json()
+        suppelier.name = data.get("name",suppelier.name)
+        suppelier.phone = data.get("phone",suppelier.phone)
+        suppelier.website = data.get("website",suppelier.website)
+        suppelier.rut = data.get("rut",suppelier.rut)
+
+        db.session.commit()
+        return jsonify({"Mensaje":"Proveedor actualizado"})
+    
+    except Exception as e:
+        db.session.rollback()
+        return jsonify({"Error": str(e)}),500
+    
+@suppelier.route("/patch_suppelier/<int:id>",methods =["PATCH"])
+def patch_suppelier(id):
+    suppelier=Suppelier.query.get(id)
+    data=request.get_json()
+
+    if not suppelier:
+        return jsonify({"Mensaje":"Proveedor no encontrado"}),404
+    try:
+        if "name" in data and data["name"]:
+            suppelier.name = data["name"]
+
+        if "phone" in data and data["phone"]:
+            suppelier.phone = data["phone"]
+
+        if "website" in data and data["website"]:
+            suppelier.website = data["website"]
+        
+        if "rut" in data and data ["rut"]:
+            suppelier.rut = data["rut"]
+        
+        db.session.commit()
+        return jsonify({"Mensaje":"Proveedor actualizado"})
+    except Exception as e:
+        db.session.rollback()
+        return jsonify({"Error": str(e)}),500
+
 @suppelier.route("/delete_suppelier/<int:id>",methods=["DELETE"])
 
 def delete_suppelier(id):
@@ -57,7 +104,8 @@ def delete_suppelier(id):
     try:
         db.session.delete(suppelier)
         db.session.commit()
-        return jsonify({"Mensaje":"Proveedor eliminado"})
+        return jsonify({"Mensaje":"Proveedor eliminado"}),200
+    
     except Exception as e:
         db.session.rollback()
         return jsonify({"Error":str(e)}),500

@@ -13,6 +13,7 @@ class Suppelier(db.Model):
 
     def serialize(self):
         return {
+            "id":self.id,
             "name":self.name,
             "phone":self.phone,
             "website":self.website,
