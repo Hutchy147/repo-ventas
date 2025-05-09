@@ -1,0 +1,30 @@
+[
+  {
+    "date": "2025-05-09",
+    "client_id": 1,
+    "discount": 0,
+    "total": 9000,
+    "details": [
+      {
+        "product_id": 1,
+        "quantity": 2,
+        "unit_price": 4500,
+        "subtotal": 9000
+      }
+    ]
+  },
+  {
+    "date": "2025-05-09",
+    "client_id": 2,
+    "discount": 5000,
+    "total": 145000,
+    "details": [
+      {
+        "product_id": 2,
+        "quantity": 1,
+        "unit_price": 150000,
+        "subtotal": 150000
+      }
+    ]
+  }
+]

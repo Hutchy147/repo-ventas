@@ -1,0 +1,23 @@
+[
+  {
+    "name": "Teclado Mecánico",
+    "price": 4500,
+    "stock": 20,
+    "category_id": 1,
+    "suppelier_id": 1
+  },
+  {
+    "name": "Placa de Video GTX 1660",
+    "price": 150000,
+    "stock": 5,
+    "category_id": 2,
+    "suppelier_id": 2
+  },
+  {
+    "name": "Mouse Inalámbrico",
+    "price": 3000,
+    "stock": 50,
+    "category_id": 3,
+    "suppelier_id": 1
+  }
+]

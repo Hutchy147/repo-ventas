@@ -1,0 +1,24 @@
+[
+  {
+    "name": "Laura Gómez",
+    "email": "laura@example.com",
+    "phone": "1165437890",
+    "address": {
+      "street": "Calle 9",
+      "number": "1234",
+      "apartment": "1A",
+      "district": "Palermo"
+    }
+  },
+  {
+    "name": "Martín Pérez",
+    "email": "martin.perez@example.com",
+    "phone": "1178952345",
+    "address": {
+      "street": "Av. Siempre Viva",
+      "number": "742",
+      "apartment": null,
+      "district": "Recoleta"
+    }
+  }
+]

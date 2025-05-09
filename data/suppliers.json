@@ -1,0 +1,26 @@
+[
+  {
+    "name": "Distribuidora Tech S.R.L.",
+    "website": "https://disttech.com",
+    "rut": "20123456789",
+    "phones": ["1133445566", "1177889900"],
+    "address": {
+      "street": "Av. de los Proveedores",
+      "number": "456",
+      "apartment": null,
+      "district": "Depósito Sur"
+    }
+  },
+  {
+    "name": "PC Express",
+    "website": "https://pcexpress.ar",
+    "rut": "20987654321",
+    "phones": ["1144556677"],
+    "address": {
+      "street": "Calle Mayorista",
+      "number": "321",
+      "apartment": "2B",
+      "district": "Centro"
+    }
+  }
+]
