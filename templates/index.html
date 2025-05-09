@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Gestión de Ventas</title>
+  <style>
+    body { font-family: Arial; margin: 20px; background: #f9f9f9; }
+    h2 { background: #222; color: #fff; padding: 10px; }
+    form, .listado { margin-bottom: 30px; padding: 10px; background: #fff; border: 1px solid #ccc; }
+    label { display: block; margin-top: 10px; }
+    input, select { width: 100%; padding: 5px; }
+    button { margin-top: 10px; padding: 10px; background: #28a745; color: white; border: none; cursor: pointer; }
+    .seccion { margin-bottom: 40px; }
+  </style>
+</head>
+<body>
+
+  <h1>Gestión de Ventas</h1>
+
+  <div class="seccion">
+    <h2>Clientes</h2>
+    <form id="form-cliente">
+      <label>Nombre: <input type="text" name="name" required></label>
+      <label>Correo: <input type="email" name="email" required></label>
+      <label>Teléfono: <input type="text" name="phone" required></label>
+      <button type="submit">Agregar Cliente</button>
+    </form>
+    <div class="listado" id="clientes-lista"></div>
+  </div>
+
+  <div class="seccion">
+    <h2>Productos</h2>
+    <form id="form-producto">
+      <label>Nombre: <input type="text" name="name" required></label>
+      <label>Precio: <input type="number" name="price" required></label>
+      <label>Categoría ID: <input type="number" name="category_id" required></label>
+      <button type="submit">Agregar Producto</button>
+    </form>
+    <div class="listado" id="productos-lista"></div>
+  </div>
+
+  <div class="seccion">
+    <h2>Proveedores</h2>
+    <form id="form-suppelier">
+      <label>Nombre: <input type="text" name="name" required></label>
+      <label>Contacto: <input type="text" name="contact_info" required></label>
+      <button type="submit">Agregar Proveedor</button>
+    </form>
+    <div class="listado" id="suppeliers-lista"></div>
+  </div>
+
+  <div class="seccion">
+    <h2>Categorías</h2>
+    <form id="form-categoria">
+      <label>Nombre: <input type="text" name="name" required></label>
+      <button type="submit">Agregar Categoría</button>
+    </form>
+    <div class="listado" id="categorias-lista"></div>
+  </div>
+
+<script>
+function renderList(endpoint, containerId) {
+  fetch(`/api/${endpoint}`)
+    .then(res => res.json())
+    .then(data => {
+      const div = document.getElementById(containerId);
+      div.innerHTML = data.map(item => `<p>${JSON.stringify(item)}</p>`).join('');
+    });
+}
+
+document.getElementById('form-cliente').addEventListener('submit', e => {
+  e.preventDefault();
+  const data = Object.fromEntries(new FormData(e.target));
+  fetch('/api/clients', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(data)
+  }).then(() => renderList('clients', 'clientes-lista'));
+});
+
+document.getElementById('form-producto').addEventListener('submit', e => {
+  e.preventDefault();
+  const data = Object.fromEntries(new FormData(e.target));
+  fetch('/api/products', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(data)
+  }).then(() => renderList('products', 'productos-lista'));
+});
+
+document.getElementById('form-suppelier').addEventListener('submit', e => {
+  e.preventDefault();
+  const data = Object.fromEntries(new FormData(e.target));
+  fetch('/api/suppeliers', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(data)
+  }).then(() => renderList('suppeliers', 'suppeliers-lista'));
+});
+
+document.getElementById('form-categoria').addEventListener('submit', e => {
+  e.preventDefault();
+  const data = Object.fromEntries(new FormData(e.target));
+  fetch('/api/categories', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(data)
+  }).then(() => renderList('categories', 'categorias-lista'));
+});
+
+// Carga inicial
+renderList('clients', 'clientes-lista');
+renderList('products', 'productos-lista');
+renderList('suppeliers', 'suppeliers-lista');
+renderList('categories', 'categorias-lista');
+</script>
+
+</body>
+</html>
