@@ -16,6 +16,10 @@ class Client(db.Model):
 
     # Relación con los teléfonos, un cliente puede tener varios números de teléfono
     phones = db.relationship('Phone', back_populates='client', cascade='all, delete-orphan')
+    
+    # Relación con las ventas, un cliente puede tener varias ventas
+    sales = db.relationship("Sale", back_populates="client", cascade="all, delete-orphan")
+
 
     def to_dict(self):
         return {

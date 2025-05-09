@@ -1,14 +1,16 @@
-from data_base import db
+from database import db
 
 
 class Sale(db.Model):
-    __tablename__ = "sales" 
+    __tablename__ = "sales"
     id = db.Column(db.Integer, primary_key=True)
     date = db.Column(db.String(20), nullable=False)
     client_id = db.Column(db.Integer, db.ForeignKey("clients.id"), nullable=False)
-
     discount = db.Column(db.Float, nullable=False)
     total = db.Column(db.Float, nullable=False)
+
+    # Relación con SaleDetail (venta tiene detalles)
+    details = db.relationship('SaleDetail', backref='sale', lazy=True)
 
     def sales_invoice(self):
         return {
@@ -19,10 +21,11 @@ class Sale(db.Model):
             "total": self.total
         }
 
+
 class SaleDetail(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    sale_id = db.Column(db.Integer, db.ForeignKey("sales.id"), nullable=False)# clave foránea
-    product_id = db.Column(db.Integer, db.ForeignKey("products.id"), nullable=False)  # clave foránea
+    sale_id = db.Column(db.Integer, db.ForeignKey("sales.id"), nullable=False)
+    product_id = db.Column(db.Integer, db.ForeignKey("products.id"), nullable=False)
     quantity = db.Column(db.Integer, nullable=False)
     unit_price = db.Column(db.Float, nullable=False)
     subtotal = db.Column(db.Float, nullable=False)
