@@ -1,6 +1,7 @@
 from flask import Blueprint, request, jsonify
 from models.client import Client
 from models.phone import Phone 
+from models.address import Address
 from extensions import db  
 
 client_bp = Blueprint("client_bp", __name__)
@@ -27,6 +28,18 @@ def create_client():
         for number in phones:
             phone = Phone(number = number, client_id = new_client.id)
             db.session.add(phone) 
+
+        # Agregar dirección
+        address_data = data.get("address")
+        if address_data:
+            address = Address(
+                street=address_data["street"],
+                number=address_data["number"],
+                apartment=address_data.get("apartment"),
+                district=address_data["district"],
+                client_id=new_client.id
+            )
+            db.session.add(address)
 
         db.session.commit() 
         return jsonify({"message": "Cliente creado con éxito"}), 201
@@ -57,6 +70,24 @@ def update_client(id):
             for number in data["phones"]:
                 phone = Phone(number = number, client_id = client.id)
                 db.session.add(phone)
+
+        #Actualizar o crear dirección
+        if "address" in data:
+            address_data = data["address"]
+            if client.address:
+                client.address.street = address_data.get("street", client.address.street)
+                client.address.number = address_data.get("number", client.address.number)
+                client.address.apartment = address_data.get("apartment", client.address.apartment)
+                client.address.district = address_data.get("district", client.address.district)
+            else:
+                address = Address(
+                    street=address_data["street"],
+                    number=address_data["number"],
+                    apartment=address_data.get("apartment"),
+                    district=address_data["district"],
+                    client_id=client.id
+                )
+                db.session.add(address)
 
         db.session.commit()
         return jsonify({"message": "Cliente actualizado"}), 200
