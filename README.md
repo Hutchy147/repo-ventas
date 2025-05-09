@@ -20,18 +20,20 @@ Visual Studio Code
 
 Python 3.11+
 
-MySQL Server (por ejemplo, XAMPP o MySQL independiente)
+MySQL Server 
 
-Postman (opcional, para pruebas)
+Postman 
+
+flask
 
 2️⃣ Clonar el repositorio
 bash
 Copiar
 Editar
-git clone <URL_DEL_REPOSITORIO>
+git clone <https://github.com/Hutchy147/repo-ventas>
 cd <carpeta-del-proyecto>
 3️⃣ Crear y activar un entorno virtual
-bash
+git bash
 Copiar
 Editar
 python -m venv venv
@@ -40,26 +42,13 @@ venv\Scripts\activate
 # En Linux/Mac
 source venv/bin/activate
 4️⃣ Instalar dependencias
-bash
-Copiar
-Editar
 pip install -r requirements.txt
 5️⃣ Configurar la base de datos
-Editá el archivo config.py con los datos de tu base MySQL:
-
-python
-Copiar
-Editar
 SQLALCHEMY_DATABASE_URI = "mysql+pymysql://usuario:contraseña@localhost/ventas_db"
 Luego creá la base de datos y dejá que Flask cree las tablas automáticamente al iniciar.
-
 6️⃣ Ejecutar el proyecto
-bash
-Copiar
-Editar
 python app.py
 El servidor quedará corriendo en http://localhost:5000
-
 🛠️ Tecnologías utilizadas
 Python 3.11
 
