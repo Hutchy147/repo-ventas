@@ -32,7 +32,6 @@ def post_suppelier():
 
         new_suppelier=Suppelier(
             name=data["name"],
-            phone=data["phone"],
             website=data["website"],
             rut=data["rut"])
         
@@ -40,7 +39,7 @@ def post_suppelier():
         db.session.add(new_suppelier)
         db.session.flush()
         for number in data.get("phones", []):
-            db.session.add(Phone(number=number, client_id=new_suppelier.id))
+            db.session.add(Phone(number=number, suppelier_id=new_suppelier.id))
 
         address_data = data.get("address")
         if address_data:
