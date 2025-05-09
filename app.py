@@ -3,7 +3,7 @@ from database import db
 from routes.clients import client_bp
 from routes.products import product_bp
 from routes.suppeliers import suppelier_bp
-from routes.categories import category_bp
+from routes.categories import categories_bp
 
 def create_app():
     app = Flask(__name__)
@@ -18,7 +18,7 @@ def create_app():
     app.register_blueprint(client_bp, url_prefix="/api/clients")
     app.register_blueprint(product_bp, url_prefix="/api/products")
     app.register_blueprint(suppelier_bp, url_prefix="/api/suppeliers")
-    app.register_blueprint(category_bp, url_prefix="/api/categories")
+    app.register_blueprint(categories_bp, url_prefix="/api/categories")
 
     # Página principal
     @app.route("/")
