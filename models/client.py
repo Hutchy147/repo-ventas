@@ -1,4 +1,4 @@
-from extensions import db
+from database import db
 from models.phone import Phone
 
 class Client(db.Model):

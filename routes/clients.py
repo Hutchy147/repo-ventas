@@ -2,7 +2,7 @@ from flask import Blueprint, request, jsonify
 from models.client import Client
 from models.phone import Phone 
 from models.address import Address
-from extensions import db  
+from database import db  
 
 client_bp = Blueprint("client_bp", __name__)
 

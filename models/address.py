@@ -1,4 +1,4 @@
-from extensions import db
+from database import db
 
 class Address(db.Model):
     __tablename__ = 'addresses'

@@ -1,4 +1,4 @@
-from extensions import db
+from database import db
 
 class Phone(db.Model):
     __tablename__ = "phones"
